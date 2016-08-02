@@ -1,0 +1,7 @@
+{
+  "utterance": "play music on",
+  "intent_type": "PlayMusicIntent",
+  "intent": {
+    "PlayMusic": "thank you"
+  }
+}

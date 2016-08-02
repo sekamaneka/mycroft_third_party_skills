@@ -1,6 +1,6 @@
 from os.path import dirname
 import os
-
+import binascii 
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
@@ -31,6 +31,18 @@ class ColorSkill(MycroftSkill):
 		off_intent = IntentBuilder("OffIntent").require("off").build()
 		self.register_intent(off_intent, self.handle_off_intent)
 
+		party_intent = IntentBuilder("PartyIntent").require("party").build()
+                self.register_intent(party_intent, self.handle_party_intent)
+
+	def handle_party_intent(self, message):	
+		for i in range(100):
+			r = binascii.b2a_hex(os.urandom(4))
+			cmd = "sudo gatttool -b 68:9E:19:16:64:33 --char-write-req -a 0x002d -n " + "00" + r
+			os.system(cmd)
+			cmd = "sudo gatttool -b 68:9E:19:16:64:33 --char-write-req -a 0x002d -n " + r + "00"
+			os.system(cmd)
+			cmd = "sudo gatttool -b 68:9E:19:16:64:33 --char-write-req -a 0x002d -n " + r[:2] + "00" + r[2:]
+			os.system(cmd)
 	def handle_red_intent(self, message):
 		os.system('sudo gatttool -b 68:9E:19:16:64:33 --char-write-req -a 0x002d -n 0000ff00')
     		self.speak_dialog("speaksies")

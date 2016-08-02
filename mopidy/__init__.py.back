@@ -1,0 +1,23 @@
+from os.path import dirname
+import os
+from adapt.intent import IntentBuilder
+from mycroft.skills.core import MycroftSkill
+from mycroft.util.log import getLogger
+__author__ = 'best'
+LOGGER = getLogger(__name__)
+
+class MusicSkill(MycroftSkill):
+    def __init__(self):
+	super(MusicSkill, self).__init__(name='MusicSkill')
+    def initialize(self):
+	self.load_data_files(dirname(__file))
+	play_music_intent = IntentBuilder('PlayMusicIntent').require('PlayMusic').build()
+	self.register_intent(play_music_intent, self.handle_play_music_intent)
+    def handle_play_music_intent(self, message):
+	os.system('mpc play')	
+
+    def stop(self):
+	pass
+
+def create_skill():
+    return MusicSkill()
