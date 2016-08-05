@@ -8,8 +8,7 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
 __author__= 'best'
-LOGGER = getLogger(__name__)
-
+LOGGER = getLogger(__name__) 
 class MusicSkill(MycroftSkill):
 	def __init__(self):
 		super(MusicSkill, self).__init__(name="MusicSkill")
@@ -51,16 +50,15 @@ class MusicSkill(MycroftSkill):
 		os.system('mpc volume +25')	
 
 	def handle_find_add_intent(self, message):
-		nameUtterance = message.metadata.get("Songname", None)
 		
+		nameUtterance = message.metadata.get("Songname", None)
 		find_query = "mpc find any " + "'" + nameUtterance + "'"
 		result = subprocess.check_output(find_query, shell=True)
 		a = result.split('\n')[0]	
-		find_add_query = "mpc findadd any " + "'" + a[14:] + "'" 
+		find_add_query = "mpc add " + "'" + "yt:" +"https://www.youtube.com/watch?v="+ a[-11:] + "'"
+		LOGGER.info(find_add_query)
 		os.system(find_add_query)
 		os.system('mpc play')
-		time.sleep(2)
-		os.system('mpc crop')
 
 	def stop(self):
     		pass
