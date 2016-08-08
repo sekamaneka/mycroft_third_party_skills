@@ -38,8 +38,10 @@ class MusicSkill(MycroftSkill):
 
 	def handle_play_intent(self, message):	
 		os.system('mpc play')	
+
 	def handle_pause_intent(self, message):	
 		os.system('mpc pause')	
+
 	def handle_next_song_intent(self, message):	
 		os.system('mpc next')	
 	
@@ -50,15 +52,19 @@ class MusicSkill(MycroftSkill):
 		os.system('mpc volume +25')	
 
 	def handle_find_add_intent(self, message):
-		
-		nameUtterance = message.metadata.get("Songname", None)
-		find_query = "mpc find any " + "'" + nameUtterance + "'"
-		result = subprocess.check_output(find_query, shell=True)
-		a = result.split('\n')[0]	
-		find_add_query = "mpc add " + "'" + "yt:" +"https://www.youtube.com/watch?v="+ a[-11:] + "'"
-		LOGGER.info(find_add_query)
-		os.system(find_add_query)
-		os.system('mpc play')
+		#Songname is taken from the regex capture group after saying play			
+		#It then gets all results but returns only the first to be added
+		#The playlist gets cleared and it play only this one song
+		#if i get annoyed by the mpc stdout		#devnull = open('/dev/null', 'w')
+								#process = subprocess.call([""], stdout=devnull)
+
+		songName = message.metadata.get("Songname", None)
+		result = subprocess.check_output(["mpc", "find", "any", songName])
+		first_result = result.split('\n')[0]	
+		subprocess.call(["mpc", "clear", "--wait"])
+		find_add_query = "yt:https://www.youtube.com/watch?v=" + first_result[-11:]
+	        subprocess.call(["mpc", "insert", find_add_query]) 	
+		subprocess.call(["mpc", "play"])
 
 	def stop(self):
     		pass
