@@ -3,3 +3,7 @@ I am currently developing two third party skills. One for remote control of some
 install mopidy from here: `https://docs.mopidy.com/en/latest/installation/debian/`
 
 install mopidy-youtube with: `sudo pip install Mopidy-YouTube`
+
+install mpc with: `sudo apt install mpc`
+
+
